@@ -1,0 +1,17 @@
+/* .cart{
+    padding-left: 20px;  
+} */
+
+.cart h2{
+    padding-left: 100px;
+}
+.cart h5{
+    padding-left: 135px;
+}
+.cart p{
+    line-height: 0%;
+}
+.cart h4{
+    font-weight: bold;
+    color: red;
+}

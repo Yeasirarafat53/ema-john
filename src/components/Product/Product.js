@@ -4,8 +4,10 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import './Product.css'
 import { Link } from 'react-router-dom';
 
-const Product = (props) => {
-    // console.log(props.product.key);
+const Product = (props) =>{ 
+    // console.log(props.product.key)
+    console.log(props.product.key);
+
     const{img,name,seller,price,stock,key} = props.product;
 
     
@@ -18,7 +20,10 @@ const Product = (props) => {
                 <img src={img} alt="" />
                 
             </div>
+
             <div className="items">
+
+            
                 <h4 className="product-name"><Link to={"/product/"+key}>{name}</Link> </h4>
                 <br />
                 <p><small>by: {seller} </small></p>

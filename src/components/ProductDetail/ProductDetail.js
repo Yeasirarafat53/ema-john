@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import fakeData from '../../fakeData';
 import Product from '../Product/Product';
 
 const ProductDetail = () => {
     // akhane productKey take app.js theke dynamically pathaici tai akhane useParams() call kore key take catch kora hoice
-    const {productKey} = useParams()
+    const {productKey} = useParams();
+    const [product,setProduct] = useState({});
+
+    useEffect(()=> {
+        fetch('http://localhost:5000/product/'+productKey)
+        .then(res => res.json())
+        .then(data => setProduct(data))
+
+    },[productKey]);
     // akhane fakeData datake import kore data gulo load kore find() use kore specific productKey er sathe match koriye datar info gulo show korabo ..
-    const product = fakeData.find(pd => pd.key === productKey)
+    // const product = fakeData.find(pd => pd.key === productKey)
     console.log(product);
   
     return (

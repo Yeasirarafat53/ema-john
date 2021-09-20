@@ -1,24 +1,21 @@
 import React, { useEffect,useState } from 'react';
-import fakeData from '../../fakeData';
+// import fakeData from '../../fakeData';
 import { getDatabaseCart, processOrder, removeFromDatabaseCart } from '../../utilities/databaseManager';
 import Cart from '../Cart/Cart';
 import ReviewItems from '../ReviewItem/ReviewItems';
 import happyImage from '../../images/giphy.gif';
+import { useHistory } from 'react-router-dom';
 
 
 const Review = () => {
     const [cart,setCart] = useState([])
 
     const [orderPlaced,setOrderPlaced] = useState(false); // by default order placed korenai tai false deyahoice
+    const history = useHistory()
 
 // event handler for clean all products
-    const handlePlaceOrder = () => {
-        // aita deya hoice jno button click deyar sathe sathe product gulo clean hoye jay mane faka hoye jay
-        setCart([]);
-        // ai state er value ta true hoye jabe jokhon state er valueke set kore dilam
-        setOrderPlaced(true);
-        // database theke neya hoice jno product gulo clean hoye jay
-        processOrder()
+    const handleProceedCheckout = () => {
+       history.push('/shipment')
     }
 
     // event handler for remove item in review order
@@ -38,16 +35,26 @@ const Review = () => {
         const savedCart = getDatabaseCart();
         // only key gulo pete chaile keys method k call kore korte hobe
         const productKeys = Object.keys(savedCart);
-        // koyta item add kora hoice seta ber kora or quantity ber kora r ki
-        const cartProducts = productKeys.map(key => {
-            // aikhane fakedata import kore sekhan theke find kore key er data er sathe miliye sei data gulo show korano hocce
-            const product = fakeData.find(pd=>pd.key ===key);
-// product er key er moddhe jokhon map kora hocce tokhon j quantity gulo pacci seigula product.quantity te set kore deya hocce
-            product.quantity = savedCart[key]
-            return product; 
+
+        fetch('http://localhost:5000/productsByKeys',{
+            method:'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(productKeys)
         })
-        // cartproducts take setCart er moddhe set kore deya hoice
-         setCart(cartProducts);
+        .then(res => res.json())
+        .then(data =>setCart(data))
+
+
+//         // koyta item add kora hoice seta ber kora or quantity ber kora r ki
+//         const cartProducts = productKeys.map(key => {
+//             // aikhane fakedata import kore sekhan theke find kore key er data er sathe miliye sei data gulo show korano hocce
+//             const product = fakeData.find(pd=>pd.key ===key);
+// // product er key er moddhe jokhon map kora hocce tokhon j quantity gulo pacci seigula product.quantity te set kore deya hocce
+//             product.quantity = savedCart[key]
+//             return product; 
+//         })
+//         // cartproducts take setCart er moddhe set kore deya hoice
+//          setCart(cartProducts);
         
     },[]);
 
@@ -78,7 +85,7 @@ const Review = () => {
             <div className="cart-container">
                 <Cart cart={cart}>
                     {/* review te jno onno akta button dkehay tai ai button ke add kore deya hoice..and  order placed korle jno setar moddhe jotgulo product ace seta jno clean kore dey..*/}
-                    <button onClick={handlePlaceOrder} className="main-button">Place Order</button>
+                    <button onClick={handleProceedCheckout} className="main-button">Proceed Checkout</button>
                 </Cart>
             </div>
             

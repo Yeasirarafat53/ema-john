@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './Shop.css';
-import fakeData from '../../fakeData';
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
 import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseManager';
@@ -13,26 +12,31 @@ import { Link } from 'react-router-dom';
 
 
 const Shop = () => { 
-  const first10 = fakeData.slice(0,10);
+//   const first10 = fakeData.slice(0,10);
 
-
-  
-  const[products,setProducts] = useState(first10);
+  const[products,setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+
+  useEffect(()=> {
+      fetch('http://localhost:5000/products')
+      .then(res=> res.json())
+      .then(data => setProducts(data))
+  },[])
 
 // aitapart tuku holo review page a product gulo dekhalew abr shop a ashle seta r dekhay na karon shop a cart er moddhe data gulo set kore deinai tai review.js er moddhe useEffect Part tuku same to same vabe akhanew add kore dile problem ta solve hoye jabe..akhane sudhu aktu name change kore deya hoice....
   useEffect(()=> {
 
     const savedCart = getDatabaseCart();
     const productKeys = Object.keys(savedCart);
-    const previousCart = productKeys.map(existingKey =>{
-        const product = fakeData.find(pd => pd.key === existingKey);
-        product.quantity = savedCart[existingKey];
-        return product;
-        // console.log(existingKey,savedCart[existingKey]);
+    
+
+    fetch('http://localhost:5000/productsByKeys',{
+        method:'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify(productKeys)
     })
-    setCart(previousCart);
-    // console.log(previousCart); 
+    .then(res => res.json())
+    .then(data =>setCart(data))
 
   },[])
   
